@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+
+import lightTheme from './themes/light';
+import darkTheme from './themes/dark';
 
 import Menu from './components/Menu';
 
@@ -7,6 +10,8 @@ const AppWrapper = styled.div`
   position:relative;
   
   padding-top: 50px;
+  
+  background-color: ${props => props.theme.content.backgroundColor};
 `;
 
 const StyledMenu = styled(Menu)`
@@ -23,17 +28,37 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.theme = 'light';
-    this.taskList = [];
+    this.state = {
+      isDarkMode: false,
+      taskList: [],
+    }
+  }
+
+  async componentDidMount() {
+    const response = await fetch('http://localhost:3001');
+    const tasks = await response.json();
+
+    this.setState({
+      taskList: tasks,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        isDarkMode: true,
+      });
+    }, 5000);
   }
 
   render() {
-    const { theme, taskList } = this;
+    const { isDarkMode, taskList } = this.state;
 
     return (
-      <AppWrapper>
-        <StyledMenu theme={theme}/>
-      </AppWrapper>
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <AppWrapper>
+          <StyledMenu />
+          {taskList && taskList.map(t => <p>{t.name}</p>)}
+        </AppWrapper>
+      </ThemeProvider>
     );
   }
 }

@@ -1,40 +1,44 @@
 const express = require('express');
-// const firebase = require("firebase/app");
+const cors = require('cors');
+const app = express();
+app.use(cors());
 
 const admin = require('firebase-admin');
 
-const firebaseConfig = {
-	apiKey: "AIzaSyBOdT_RT23sDEcoUkSXRDgEUcVWTxrPRag",
-	authDomain: "stack-learn.firebaseapp.com",
-	databaseURL: "https://stack-learn.firebaseio.com",
-	projectId: "stack-learn",
-	storageBucket: "",
-	messagingSenderId: "728880840563",
-	appId: "1:728880840563:web:1ca1536b628ad6ae"
-};
-// firebase.initializeApp(firebaseConfig);
+const serviceAccount = require('./stack-learn-firebase-adminsdk-aidxm-6cd53e36ed.json');
+
 admin.initializeApp({
-	firebaseConfig
+	credential: admin.credential.cert(serviceAccount),
+	databaseURL: "https://stack-learn.firebaseio.com"
 });
 
 const db = admin.firestore();
-db.collection('tasks').get()
-	.then(res => {
-		console.log(res);
-	})
-	.catch(e => console.log(e));
 
-// const app = express();
-//
-// const firebaseConfig = {
-// 	apiKey: "AIzaSyBOdT_RT23sDEcoUkSXRDgEUcVWTxrPRag",
-// 	authDomain: "stack-learn.firebaseapp.com",
-// 	databaseURL: "https://stack-learn.firebaseio.com",
-// 	projectId: "stack-learn",
-// 	storageBucket: "",
-// 	messagingSenderId: "728880840563",
-// 	appId: "1:728880840563:web:1ca1536b628ad6ae"
-// };
-// firebase.initializeApp(firebaseConfig);
-//
-// const database = firebase.database();
+app.get('/', (req, res) => {
+	db.collection('tasks').get()
+		.then(snap => {
+			let result = [];
+			snap.forEach(doc => {
+				result.push({
+					id: doc.id,
+					...doc.data(),
+				});
+			});
+			res.send(result);
+		})
+		.catch(e => console.log(e));
+});
+
+// db.collection('tasks').add({
+// 	name: 'new task',
+// 	subtasks: [
+// 		{
+// 			name: 'new subtask',
+// 			id: 'teststest',
+// 		}
+// 	],
+// }).then(res => {
+// 	console.log(res);
+// });
+
+app.listen(3001);

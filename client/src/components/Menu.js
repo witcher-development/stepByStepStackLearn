@@ -11,15 +11,15 @@ class Menu extends Component {
 
 		return (
 			<div className={className}>
-				{ theme }
+				{/*{ theme }*/}
 			</div>
 		);
 	}
 }
 
-Menu.propTypes = {
-	theme: PropTypes.string.isRequired,
-};
+// Menu.propTypes = {
+// 	theme: PropTypes.string.isRequired,
+// };
 
 export default Menu;
 
