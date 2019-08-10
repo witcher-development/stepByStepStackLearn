@@ -1,10 +1,11 @@
 export default {
 	header: {
-		backgroundColor: '#3C3F41',
+		backgroundColor: '#2B2B2B',
+		borderColor: '#3C3F41',
 		textColor: '#fff',
 	},
 	content: {
-		backgroundColor: '#2B2B2B',
+		backgroundColor: '#3C3F41',
 		textColor: '#fff',
 	}
 }

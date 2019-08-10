@@ -5,22 +5,17 @@ import lightTheme from './themes/light';
 import darkTheme from './themes/dark';
 
 import Menu from './components/Menu';
+import Content from './components/Content';
 
 const AppWrapper = styled.div`
-  position:relative;
+  height: 100%;
   
   padding-top: 50px;
   
+  color: ${props => props.theme.content.textColor};
   background-color: ${props => props.theme.content.backgroundColor};
-`;
-
-const StyledMenu = styled(Menu)`
-  width: 100%;
-  height: 50px;
   
-  position:fixed;
-  top: 0;
-  left: 0;
+  position:relative;
 `;
 
 class App extends Component {
@@ -29,34 +24,47 @@ class App extends Component {
     super(props);
 
     this.state = {
-      isDarkMode: false,
+      theme: 'light',
       taskList: [],
     }
   }
 
   async componentDidMount() {
+    const theme = localStorage.getItem('theme');
+    theme && this.setState({ theme });
+
     const response = await fetch('http://localhost:3001');
     const tasks = await response.json();
 
     this.setState({
       taskList: tasks,
     });
+  }
 
-    setTimeout(() => {
-      this.setState({
-        isDarkMode: true,
-      });
-    }, 5000);
+  toggleTheme() {
+    const { theme } = this.state;
+
+    let newTheme = '';
+    if (theme === 'light') newTheme = 'dark';
+    if (theme === 'dark') newTheme = 'light';
+
+    localStorage.setItem('theme', newTheme);
+    this.setState({
+      theme: newTheme
+    });
   }
 
   render() {
-    const { isDarkMode, taskList } = this.state;
+    const { theme, taskList } = this.state;
 
     return (
-      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <AppWrapper>
-          <StyledMenu />
-          {taskList && taskList.map(t => <p>{t.name}</p>)}
+
+          <Menu toggleTheme={() => this.toggleTheme()} theme={theme} />
+
+          <Content taskList={taskList} />
+
         </AppWrapper>
       </ThemeProvider>
     );
