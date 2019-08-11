@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
+
 app.use(cors());
+app.use(bodyParser.json());
 
 const admin = require('firebase-admin');
 
@@ -14,31 +17,45 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-app.get('/', (req, res) => {
-	db.collection('tasks').get()
-		.then(snap => {
-			let result = [];
-			snap.forEach(doc => {
-				result.push({
-					id: doc.id,
-					...doc.data(),
-				});
+async function getData() {
+	try {
+		const response = await db.collection('tasks').get();
+
+		let result = [];
+		response.forEach(doc => {
+			result.push({
+				id: doc.id,
+				...doc.data(),
 			});
-			res.send(result);
-		})
-		.catch(e => console.log(e));
+		});
+		return result;
+
+	} catch (e) {
+	  console.log(e);
+	}
+}
+
+app.get('/', async (req, res) => {
+	res.send(await getData());
 });
 
-// db.collection('tasks').add({
-// 	name: 'new task',
-// 	subtasks: [
-// 		{
-// 			name: 'new subtask',
-// 			id: 'teststest',
-// 		}
-// 	],
-// }).then(res => {
-// 	console.log(res);
-// });
+app.post('/create', (req, res) => {
+	const { name, parentId } = req.body;
+
+	if (parentId) {
+
+	}
+
+});
+
+app.post('/update', (req, res) => {
+	const { name, id } = req.body;
+
+	if (parentId) {
+
+	}
+});
+
+db.collection('tasks').doc('84wFSI18mMhuAvtXMq66').get().then(res => console.log(res.data()));
 
 app.listen(3001);

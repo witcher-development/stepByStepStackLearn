@@ -58,10 +58,6 @@ const LightOff = styled(LightOffSvg)`
 `;
 
 class Menu extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
 		const { toggleTheme, theme } = this.props;
 

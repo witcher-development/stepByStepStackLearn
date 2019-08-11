@@ -25,20 +25,14 @@ class App extends Component {
 
     this.state = {
       theme: 'light',
-      taskList: [],
     }
   }
 
   async componentDidMount() {
     const theme = localStorage.getItem('theme');
-    theme && this.setState({ theme });
-
-    const response = await fetch('http://localhost:3001');
-    const tasks = await response.json();
-
-    this.setState({
-      taskList: tasks,
-    });
+    if (theme) {
+      this.setState({ theme });
+    }
   }
 
   toggleTheme() {
@@ -55,7 +49,7 @@ class App extends Component {
   }
 
   render() {
-    const { theme, taskList } = this.state;
+    const { theme } = this.state;
 
     return (
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
@@ -63,7 +57,7 @@ class App extends Component {
 
           <Menu toggleTheme={() => this.toggleTheme()} theme={theme} />
 
-          <Content taskList={taskList} />
+          <Content />
 
         </AppWrapper>
       </ThemeProvider>
