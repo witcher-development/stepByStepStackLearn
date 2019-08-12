@@ -36,7 +36,26 @@ async function getData() {
 }
 
 app.get('/', async (req, res) => {
-	res.send(await getData());
+
+	const response = await getData();
+
+	let alreadyUsed = [];
+	let result = [];
+
+	for (let i = 0; i < response.length; i++) {
+		let task = response[i];
+
+		if (alreadyUsed.indexOf(task.id) > -1) continue;
+
+		let [subTaskIds, filledTask] = fillSubTasks(response, task);
+
+		alreadyUsed = [...alreadyUsed, ...subTaskIds];
+		result.push(filledTask);
+	}
+
+	// console.log(result);
+
+	res.send(result);
 });
 
 app.post('/create', (req, res) => {
@@ -56,6 +75,21 @@ app.post('/update', (req, res) => {
 	}
 });
 
-db.collection('tasks').doc('84wFSI18mMhuAvtXMq66').get().then(res => console.log(res.data()));
+// db.collection('tasks').doc('84wFSI18mMhuAvtXMq66').get().then(res => console.log(res.data()));
 
 app.listen(3001);
+
+const fillSubTasks = (commonArray, task) => {
+	let alreadyUsed = [];
+	let filledTask = Object.assign({}, task);
+
+	filledTask.subtasks = filledTask.subtasks.map(id => {
+
+		let subTask = commonArray.find(sub => sub.id === id);
+		alreadyUsed.push(subTask.id);
+
+		return subTask;
+	});
+
+	return [alreadyUsed, filledTask];
+};

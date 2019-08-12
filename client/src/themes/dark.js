@@ -7,5 +7,7 @@ export default {
 	content: {
 		backgroundColor: '#3C3F41',
 		textColor: '#fff',
+		loadingBg: '#fff',
+		loadingLine: '#2B2B2B',
 	}
 }

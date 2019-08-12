@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import styled  from 'styled-components';
 
+import Loading from './Loading';
 import TaskList from './TaskList';
 
 const Inner = styled.main`
@@ -79,7 +80,7 @@ class Content extends Component {
 		return (
 			<Inner>
 				{ loading ? (
-					<p>Loading...</p>
+					<Loading />
 				) : (
 					<TaskList taskList={taskList} createOrUpdateTask={(name, id, parentId) => this.createOrUpdateTask(name, id, parentId) } />
 				)}
