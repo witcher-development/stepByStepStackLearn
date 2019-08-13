@@ -47,13 +47,13 @@ app.get('/', async (req, res) => {
 
 		if (alreadyUsed.indexOf(task.id) > -1) continue;
 
-		let [subTaskIds, filledTask] = fillSubTasks(response, task);
+		let [cutArrayOfSubTasks, filledTask] = recursiveFillOneBranchOfTasksTree(response, task);
 
-		alreadyUsed = [...alreadyUsed, ...subTaskIds];
+		alreadyUsed = response.filter(t => cutArrayOfSubTasks.indexOf(t.id) === -1);
 		result.push(filledTask);
 	}
 
-	// console.log(result);
+	console.log(result);
 
 	res.send(result);
 });
@@ -79,9 +79,37 @@ app.post('/update', (req, res) => {
 
 app.listen(3001);
 
+const recursiveFillOneBranchOfTasksTree = (commonArray, task) => {
+
+	let [usedIds, filledTask] = fillSubTasks(commonArray, task);
+	console.log('ids: \n', usedIds, 'task: \n', filledTask);
+	let cutCommonArray = commonArray.filter(t => usedIds.indexOf(t.id) === -1);
+	console.log('cut array: \n', cutCommonArray);
+
+	let filledSubTasks = filledTask.subtasks.map(t => {
+		if (t.subtasks.length) {
+
+			let [cutSubArray, filledSubTask] = recursiveFillOneBranchOfTasksTree(cutCommonArray, t);
+			cutCommonArray = commonArray.filter(sub => cutSubArray.indexOf(sub) === -1);
+
+			return filledSubTask;
+
+		} else {
+			return t;
+		}
+	});
+
+	filledTask.subtasks = filledSubTasks;
+
+	return [cutCommonArray, filledTask];
+};
+
 const fillSubTasks = (commonArray, task) => {
 	let alreadyUsed = [];
 	let filledTask = Object.assign({}, task);
+
+	// console.log('array: \n', commonArray);
+	// console.log('task: \n', task);
 
 	filledTask.subtasks = filledTask.subtasks.map(id => {
 
@@ -90,6 +118,8 @@ const fillSubTasks = (commonArray, task) => {
 
 		return subTask;
 	});
+
+	// console.log('filled: \n', filledTask);
 
 	return [alreadyUsed, filledTask];
 };
