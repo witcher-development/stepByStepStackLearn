@@ -9,6 +9,10 @@ const TaskNameInput = styled.input`
 	
 `;
 
+const ListPadding = styled.div`
+	padding-left: 20px;
+`;
+
 class Task extends Component {
 	constructor(props) {
 		super(props);
@@ -27,7 +31,13 @@ class Task extends Component {
 
 				{ parentId }
 
-				{ task.id && <TaskList taskList={task.subtasks} createOrUpdateTask={createOrUpdateTask} parentId={task.id} /> }
+				{ task.id &&
+					(
+						<ListPadding>
+							<TaskList taskList={task.subtasks} createOrUpdateTask={createOrUpdateTask} parentId={task.id} />
+						</ListPadding>
+					)
+				}
 			</div>
 		);
 	}
