@@ -9,7 +9,7 @@ const Inner = styled.main`
 	max-width: 1000px;
 	
 	margin: 0 auto;
-	padding-top: 50px;
+	padding: 50px 20px 0;
 	
 	p {
 		margin: 0;
@@ -36,41 +36,42 @@ class Content extends Component {
 		});
 	}
 
-	async createOrUpdateTask(name, id, parentId) {
+	async APIController(type, task) {
 		const url = 'http://localhost:3001';
 
-		// console.log('name: ', name);
-		// console.log('id: ', id);
-		// console.log('parentId: ', parentId);
+		const { id, name, subtasks } = task;
+		let response;
 
-		let newData = [];
-
-		if (!id) {
-			if (parentId) { // create sub task
-
-				newData = await axios.post(url + '/create', {
-					name,
-					parentId,
-				});
-			} else { // create high order tasks
-				newData = await axios.post(url + '/create', {
-					name,
-				});
-			}
-		} else {
-			if (name) { // update existed task
-				newData = await axios.post(url + '/update', {
-					id,
-					name,
-				});
-			} else { // delete task
-				newData = await axios.post(url + '/delete', {
-					id,
-				});
-			}
+		if (type === 'create') {
+			response = await axios.post(url + '/create', {
+				name,
+			});
 		}
 
-		console.log(newData);
+		if (type === 'update') {
+			response = await axios.post(url + '/update', {
+				id,
+				name,
+				subtasks,
+			});
+		}
+
+		if (type === 'delete') {
+			response = await axios.post(url + '/delete', {
+				id,
+			});
+		}
+
+		// if (response.status === 200) {
+		// 	if (action === 'update') {
+		// 		const tasks = await axios.get('http://localhost:3001');
+		//
+		// 		this.setState({
+		// 			taskList: tasks.data,
+		// 			loading: false,
+		// 		});
+		// 	}
+		// }
 
 	}
 
@@ -82,7 +83,7 @@ class Content extends Component {
 				{ loading ? (
 					<Loading />
 				) : (
-					<TaskList taskList={taskList} createOrUpdateTask={(name, id, parentId) => this.createOrUpdateTask(name, id, parentId) } />
+					<TaskList taskList={taskList} APIController={(name, id, parentId) => this.APIController(name, id, parentId) } />
 				)}
 			</Inner>
 		);

@@ -7,7 +7,7 @@ import TaskType from '../types/taskType';
 
 class TaskList extends Component {
 	render() {
-		const { taskList, createOrUpdateTask, parentId } = this.props;
+		const { taskList, APIController } = this.props;
 
 		return (
 			<div>
@@ -16,12 +16,11 @@ class TaskList extends Component {
 						<Task
 							key={t.id}
 							task={t}
-							createOrUpdateTask={createOrUpdateTask}
-							parentId={parentId}
+							APIController={APIController}
 						/>
 					))
 				}
-				<Task createOrUpdateTask={createOrUpdateTask} parentId={parentId} />
+				<Task APIController={APIController} />
 			</div>
 		);
 	}
@@ -29,13 +28,11 @@ class TaskList extends Component {
 
 TaskList.propTypes = {
 	taskList: PropTypes.arrayOf(TaskType),
-	createOrUpdateTask: PropTypes.func.isRequired,
-	parentId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+	APIController: PropTypes.func.isRequired,
 };
 
 TaskList.defaultProps = {
 	taskList: [],
-	parentId: false,
 };
 
 export default TaskList;

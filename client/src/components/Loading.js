@@ -64,7 +64,12 @@ const Dot = styled.div`
 `;
 
 class Loading extends Component {
+	constructor(props) {
+		super(props);
+	}
+
 	render() {
+		const { className } = this.props;
 
 		let dotArray = [];
 		for (let i = 0; i < 10; i++) {
@@ -72,9 +77,9 @@ class Loading extends Component {
 		}
 
 		return (
-			<Wrapper>
+			<Wrapper className={className} >
 				<Line>
-					{ dotArray.map(() => <Dot />) }
+					{ dotArray.map((_, i) => <Dot key={i} />) }
 				</Line>
 			</Wrapper>
 		)
