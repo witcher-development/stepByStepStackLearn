@@ -112,12 +112,10 @@ class Task extends Component {
 		this.toggleSubList = this.toggleSubList.bind(this);
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
-	}
 
-	componentDidUpdate(prevProps) {
-		const { task } = this.props;
-
-
+		this.newSubTask = React.createRef();
+		this.onChangeSub = this.onChangeSub.bind(this);
+		this.onBlurSub = this.onBlurSub.bind(this);
 	}
 
 	toggleSubList() {
@@ -128,24 +126,83 @@ class Task extends Component {
 
 	onChange(name) {
 		const { task } = this.state;
-		let newTask = Object.assign({}, task);
 
-		newTask.name = name;
+		task.name = name;
 
 		this.setState({
-			task: newTask,
+			task,
 		});
 	}
 
 	onBlur() {
-		const {task} = this.state;
-		const {task: taskFromProps} = this.props;
-		const {APIController} = this.props;
+		const { task } = this.state;
+		const { APIController } = this.props;
+
+		console.log(task);
+
+		if (task.name) {
+			APIController('update', task);
+		} else {
+			APIController('delete', task.id);
+		}
+	}
+
+	onChangeSub(name, i) {
+		const { task } = this.state;
+
+		if (name) {
+			task.subtasks[i] = name;
+		} else {
+			task.subtasks.splice(i, 1);
+		}
+
+		this.setState({
+			task,
+		}, () => {
+			if (!name) {
+				this.onBlur();
+			}
+		});
+	}
+
+	onBlurSub(name) {
+		const { onChangeSub, onBlur } = this;
+		const { subtasks } = this.state.task;
+
+		onChangeSub(name, subtasks.length);
+		onBlur();
+
+		this.newSubTask.current.value = '';
 	}
 
 	render() {
-		const { APIController } = this.props;
 		const { isListOpen, task, loading } = this.state;
+
+		const subList = (
+			<SubList className={isListOpen && 'active'}>
+
+				{
+					!!task.subtasks.length && task.subtasks.map((name, i) =>
+						(
+							<TaskInput
+								value={name}
+								onChange={(e) => this.onChangeSub(e.target.value, i)}
+								onBlur={this.onBlur}
+								key={i}
+							/>
+						)
+					)
+				}
+
+				<TaskInput
+					defaultValue=''
+					onBlur={(e) => this.onBlurSub(e.target.value)}
+					ref={this.newSubTask}
+					className='new-task'
+				/>
+
+			</SubList>
+		);
 
 		return (
 			<InputWrap>
@@ -156,32 +213,14 @@ class Task extends Component {
 					className={!task.id && 'new-task'}
 				/>
 
-				{ loading && <LoadingForInput />}
+				{ loading && <LoadingForInput /> }
 				
 				{ task.id &&
 					(
 						<div>
 							<ToggleListButton onClick={this.toggleSubList}/>
 
-							<SubList className={isListOpen && 'active'}>
-
-								{
-									!!task.subtasks.length && task.subtasks.map(name =>
-										(
-											<TaskInput
-												defaultValue={name}
-											 	onBlur={this.onBlur}
-											/>
-										)
-									)
-								}
-
-								<TaskInput
-									defaultValue=''
-									onBlur={this.onBlur}
-								/>
-
-							</SubList>
+							{ subList }
 						</div>
 					)
 				}

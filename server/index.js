@@ -46,11 +46,11 @@ app.post('/create', (req, res) => {
 
 app.post('/update', async (req, res) => {
 	try {
-		const { name, id } = req.body;
+		const { task } = req.body;
 
-		let taskRef = db.collection('tasks').doc(id);
+		let taskRef = db.collection('tasks').doc(task.id);
 
-		let result = await taskRef.update({ name });
+		let result = await taskRef.update(task);
 
 		res.status(200).send(true);
 

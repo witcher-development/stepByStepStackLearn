@@ -49,11 +49,7 @@ class Content extends Component {
 		}
 
 		if (type === 'update') {
-			response = await axios.post(url + '/update', {
-				id,
-				name,
-				subtasks,
-			});
+			response = await axios.post(url + '/update', { task });
 		}
 
 		if (type === 'delete') {
