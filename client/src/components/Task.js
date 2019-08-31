@@ -109,13 +109,17 @@ class Task extends Component {
 			loading: false,
 		};
 
-		this.toggleSubList = this.toggleSubList.bind(this);
+		this.newTask = React.createRef();
+
 		this.onChange = this.onChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 
 		this.newSubTask = React.createRef();
+
+		this.toggleSubList = this.toggleSubList.bind(this);
 		this.onChangeSub = this.onChangeSub.bind(this);
 		this.onBlurSub = this.onBlurSub.bind(this);
+		this.addNewSubTask = this.addNewSubTask.bind(this);
 	}
 
 	toggleSubList() {
@@ -134,45 +138,79 @@ class Task extends Component {
 		});
 	}
 
-	onBlur() {
+	async onBlur() {
 		const { task } = this.state;
 		const { APIController } = this.props;
 
-		console.log(task);
+		if (!task.id && !task.name) return;
 
-		if (task.name) {
-			APIController('update', task);
+		if (!task.id) {
+			this.setState({
+				loading: true
+			});
+			const response = await APIController('create', task);
+
+			if (response.done) {
+				this.setState({
+					loading: false,
+					task: { name: '', subtasks: [] },
+				});
+				this.newTask.current.value = '';
+			}
+
+		} else if (task.name) {
+			this.setState({
+				loading: true
+			});
+			const response = await APIController('update', task);
+
+			if (response.done) {
+				this.setState({
+					loading: false
+				});
+			}
 		} else {
-			APIController('delete', task.id);
+			this.setState({
+				loading: true
+			});
+			const response = await APIController('delete', task);
 		}
 	}
 
 	onChangeSub(name, i) {
 		const { task } = this.state;
 
-		if (name) {
-			task.subtasks[i] = name;
-		} else {
+		task.subtasks[i] = name;
+
+		this.setState({
+			task,
+		});
+	}
+
+	onBlurSub(name, i) {
+		const { task } = this.state;
+
+		if (!name) {
 			task.subtasks.splice(i, 1);
 		}
 
 		this.setState({
 			task,
 		}, () => {
-			if (!name) {
-				this.onBlur();
-			}
+			this.onBlur();
 		});
 	}
 
-	onBlurSub(name) {
+	addNewSubTask(name) {
 		const { onChangeSub, onBlur } = this;
 		const { subtasks } = this.state.task;
 
-		onChangeSub(name, subtasks.length);
-		onBlur();
+		if (name) {
+			onChangeSub(name, subtasks.length);
+			onBlur();
 
-		this.newSubTask.current.value = '';
+			this.newSubTask.current.value = '';
+		}
 	}
 
 	render() {
@@ -187,7 +225,7 @@ class Task extends Component {
 							<TaskInput
 								value={name}
 								onChange={(e) => this.onChangeSub(e.target.value, i)}
-								onBlur={this.onBlur}
+								onBlur={(e) => this.onBlurSub(e.target.value, i)}
 								key={i}
 							/>
 						)
@@ -196,7 +234,7 @@ class Task extends Component {
 
 				<TaskInput
 					defaultValue=''
-					onBlur={(e) => this.onBlurSub(e.target.value)}
+					onBlur={(e) => this.addNewSubTask(e.target.value)}
 					ref={this.newSubTask}
 					className='new-task'
 				/>
@@ -210,6 +248,7 @@ class Task extends Component {
 					value={task.name}
 					onBlur={this.onBlur}
 					onChange={(e) => this.onChange(e.target.value)}
+					ref={this.newTask}
 					className={!task.id && 'new-task'}
 				/>
 

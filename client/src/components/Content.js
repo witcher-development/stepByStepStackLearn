@@ -39,35 +39,38 @@ class Content extends Component {
 	async APIController(type, task) {
 		const url = 'http://localhost:3001';
 
-		const { id, name, subtasks } = task;
-		let response;
+		const { id, name } = task;
 
 		if (type === 'create') {
-			response = await axios.post(url + '/create', {
+			const response = await axios.post(url + '/create', {
 				name,
 			});
+
+			if (response.status === 200) {
+				await this.setState({
+					taskList: [...this.state.taskList, response.data]
+				});
+				return { done: true };
+			}
 		}
 
 		if (type === 'update') {
-			response = await axios.post(url + '/update', { task });
+			const response = await axios.post(url + '/update', { task });
+
+			if (response.status === 200) {
+				return { done: true };
+			}
 		}
 
 		if (type === 'delete') {
-			response = await axios.post(url + '/delete', {
-				id,
-			});
-		}
+			const response = await axios.delete(`${url}/delete/${id}`);
 
-		// if (response.status === 200) {
-		// 	if (action === 'update') {
-		// 		const tasks = await axios.get('http://localhost:3001');
-		//
-		// 		this.setState({
-		// 			taskList: tasks.data,
-		// 			loading: false,
-		// 		});
-		// 	}
-		// }
+			if (response.status === 200) {
+				this.setState({
+					taskList: this.state.taskList.filter(task => task.id !== id),
+				});
+			}
+		}
 
 	}
 
@@ -79,7 +82,7 @@ class Content extends Component {
 				{ loading ? (
 					<Loading />
 				) : (
-					<TaskList taskList={taskList} APIController={(name, id, parentId) => this.APIController(name, id, parentId) } />
+					<TaskList taskList={taskList} APIController={(name, id) => this.APIController(name, id) } />
 				)}
 			</Inner>
 		);

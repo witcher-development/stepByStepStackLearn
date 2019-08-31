@@ -17,7 +17,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-async function getTasks() {
+app.get('/', async (req, res) => {
 	try {
 		const response = await db.collection('tasks').get();
 
@@ -28,20 +28,35 @@ async function getTasks() {
 				...doc.data(),
 			});
 		});
-		return result;
+
+		res.send(result);
 
 	} catch (e) {
-	  console.log(e);
+		console.log(e);
 	}
-}
+});
 
-app.post('/create', (req, res) => {
-	const { name, parentId } = req.body;
+app.post('/create', async (req, res) => {
+	try {
+		const { name } = req.body;
 
-	if (parentId) {
+		const documentReference = await db.collection('tasks').add({
+			name,
+			subtasks: [],
+		});
 
+		const response = await documentReference.get();
+		const document = {
+			id: response.id,
+			...response.data(),
+		};
+
+		res.status(200).send(document);
+
+	} catch (e) {
+		console.log(e);
+		res.status(500).send(e);
 	}
-
 });
 
 app.post('/update', async (req, res) => {
@@ -50,9 +65,9 @@ app.post('/update', async (req, res) => {
 
 		let taskRef = db.collection('tasks').doc(task.id);
 
-		let result = await taskRef.update(task);
+		await taskRef.update(task);
 
-		res.status(200).send(true);
+		res.status(200).send();
 
 	} catch (e) {
 		console.log(e);
@@ -60,13 +75,20 @@ app.post('/update', async (req, res) => {
 	}
 });
 
-// db.collection('tasks').doc('84wFSI18mMhuAvtXMq66').get().then(res => console.log(res.data()));
+app.delete('/delete/:id', async (req, res) => {
+	try {
+		const { id } = req.params;
 
-app.get('/', async (req, res) => {
+		let taskRef = db.collection('tasks').doc(id);
 
-	const result = await getTasks();
+		await taskRef.delete();
 
-	res.send(result);
+		res.status(200).send();
+
+	} catch (e) {
+		console.log(e);
+		res.status(500).send(e);
+	}
 });
 
 app.listen(3001);

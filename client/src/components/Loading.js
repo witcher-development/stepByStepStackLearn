@@ -64,10 +64,6 @@ const Dot = styled.div`
 `;
 
 class Loading extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
 		const { className } = this.props;
 
