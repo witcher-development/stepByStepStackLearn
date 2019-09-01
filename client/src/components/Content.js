@@ -28,7 +28,7 @@ class Content extends Component {
 	}
 
 	async componentDidMount() {
-		const tasks = await axios.get('http://localhost:3001');
+		const tasks = await axios.get('https://us-central1-stack-learn.cloudfunctions.net/app');
 
 		this.setState({
 			taskList: tasks.data,
@@ -37,7 +37,7 @@ class Content extends Component {
 	}
 
 	async APIController(type, task) {
-		const url = 'http://localhost:3001';
+		const url = 'https://us-central1-stack-learn.cloudfunctions.net/app';
 
 		const { id, name } = task;
 

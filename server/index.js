@@ -91,4 +91,6 @@ app.delete('/delete/:id', async (req, res) => {
 	}
 });
 
-app.listen(3001);
+const functions = require('firebase-functions');
+
+exports.app = functions.https.onRequest(app);
