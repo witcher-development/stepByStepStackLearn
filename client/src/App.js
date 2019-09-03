@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
+import { connect } from 'react-redux';
 
 import lightTheme from './themes/light';
 import darkTheme from './themes/dark';
 
 import Menu from './components/Menu';
 import Content from './components/Content';
+import { setTheme } from './store';
 
 const AppWrapper = styled.div`
   height: 100%;
@@ -19,43 +21,21 @@ const AppWrapper = styled.div`
 `;
 
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      theme: 'light',
-    }
-  }
-
-  async componentDidMount() {
+  componentDidMount() {
     const theme = localStorage.getItem('theme');
     if (theme) {
-      this.setState({ theme });
+      this.props.dispatch(setTheme(theme));
     }
-  }
-
-  toggleTheme() {
-    const { theme } = this.state;
-
-    let newTheme = '';
-    if (theme === 'light') newTheme = 'dark';
-    if (theme === 'dark') newTheme = 'light';
-
-    localStorage.setItem('theme', newTheme);
-    this.setState({
-      theme: newTheme
-    });
   }
 
   render() {
-    const { theme } = this.state;
+    const { theme } = this.props;
 
     return (
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <AppWrapper>
 
-          <Menu toggleTheme={() => this.toggleTheme()} theme={theme} />
+          <Menu />
 
           <Content />
 
@@ -65,4 +45,12 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    theme: state.theme,
+  }
+};
+
+const mapDispatchToProps = { setTheme };
+
+export default connect(mapStateToProps)(App);

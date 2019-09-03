@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled  from 'styled-components';
+import { connect } from 'react-redux';
 
 import { ReactComponent as LightOnSvg } from '../assets/light-bulb.svg';
 import { ReactComponent as LightOffSvg } from '../assets/light-bulb-dark.svg';
+import { setTheme } from '../store';
 
 const StyledMenu = styled.header`
 	display: flex;
@@ -58,8 +59,25 @@ const LightOff = styled(LightOffSvg)`
 `;
 
 class Menu extends Component {
+	constructor(props) {
+		super(props);
+
+		this.toggleTheme = this.toggleTheme.bind(this);
+	}
+
+	toggleTheme() {
+		const { theme } = this.props;
+
+		let newTheme = '';
+		if (theme === 'light') newTheme = 'dark';
+		if (theme === 'dark') newTheme = 'light';
+
+		localStorage.setItem('theme', newTheme);
+		this.props.setTheme(newTheme);
+	}
+
 	render() {
-		const { toggleTheme, theme } = this.props;
+		const { theme } = this.props;
 
 		return (
 			<StyledMenu>
@@ -68,7 +86,7 @@ class Menu extends Component {
 					<a href="/">Logo</a>
 				</Logo>
 
-				<ToggleTheme onClick={toggleTheme}>
+				<ToggleTheme onClick={this.toggleTheme}>
 					{
 						theme === 'dark' ?
 							<LightOn title="Light on!" />
@@ -82,10 +100,15 @@ class Menu extends Component {
 	}
 }
 
-Menu.propTypes = {
-	theme: PropTypes.string.isRequired,
-	toggleTheme: PropTypes.func.isRequired,
+const mapStateToProps = (state) => {
+	return {
+		theme: state.theme,
+	}
 };
 
-export default Menu;
+const mapDispatchToProps = {
+	setTheme,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
 

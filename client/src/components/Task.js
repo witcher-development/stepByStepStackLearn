@@ -75,8 +75,8 @@ const ToggleListButton = styled.div`
 		
 		transform: rotate(45deg);
 		
-		border-right: 2px solid ${props => props.theme.content.textColor};;
-		border-bottom: 2px solid ${props => props.theme.content.textColor};;
+		border-right: 2px solid ${props => props.theme.content.textColor};
+		border-bottom: 2px solid ${props => props.theme.content.textColor};
 		
 		box-sizing: border-box;
 	}
