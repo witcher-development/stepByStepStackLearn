@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import styled  from 'styled-components';
+import { connect } from 'react-redux';
+import { setTasks, setLoading } from '../store/actions';
 
 import Loading from './Loading';
 import TaskList from './TaskList';
@@ -17,65 +19,17 @@ const Inner = styled.main`
 `;
 
 class Content extends Component {
-
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			taskList: [],
-			loading: true,
-		}
-	}
-
 	async componentDidMount() {
+		const { setTasks, setLoading } = this.props;
+
 		const tasks = await axios.get('https://us-central1-stack-learn.cloudfunctions.net/app');
 
-		this.setState({
-			taskList: tasks.data,
-			loading: false,
-		});
-	}
-
-	async APIController(type, task) {
-		const url = 'https://us-central1-stack-learn.cloudfunctions.net/app';
-
-		const { id, name } = task;
-
-		if (type === 'create') {
-			const response = await axios.post(url + '/create', {
-				name,
-			});
-
-			if (response.status === 200) {
-				await this.setState({
-					taskList: [...this.state.taskList, response.data]
-				});
-				return { done: true };
-			}
-		}
-
-		if (type === 'update') {
-			const response = await axios.post(url + '/update', { task });
-
-			if (response.status === 200) {
-				return { done: true };
-			}
-		}
-
-		if (type === 'delete') {
-			const response = await axios.delete(`${url}/delete/${id}`);
-
-			if (response.status === 200) {
-				this.setState({
-					taskList: this.state.taskList.filter(task => task.id !== id),
-				});
-			}
-		}
-
+		setTasks(tasks.data);
+		setLoading(false);
 	}
 
 	render() {
-		const { taskList, loading } = this.state;
+		const { taskList, loading } = this.props;
 
 		return (
 			<Inner>
@@ -89,5 +43,18 @@ class Content extends Component {
 	}
 }
 
-export default Content;
+const mapStateToProps = (state) => {
+	const { taskList, loading } = state;
+	return {
+		taskList,
+		loading,
+	}
+};
+
+const mapDispatchToProps = {
+	setTasks,
+	setLoading,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Content);
 

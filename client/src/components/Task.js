@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled  from 'styled-components';
+import { connect } from 'react-redux';
+
+import { store } from '../index';
+import * as API from '../store/APIController';
 
 import TaskType from '../types/taskType';
 import Loading from './Loading';
@@ -140,7 +144,7 @@ class Task extends Component {
 
 	async onBlur() {
 		const { task } = this.state;
-		const { APIController } = this.props;
+		const { APIController, addTask } = this.props;
 
 		if (!task.id && !task.name) return;
 
@@ -148,7 +152,9 @@ class Task extends Component {
 			this.setState({
 				loading: true
 			});
-			const response = await APIController('create', task);
+			const response = await store.dispatch(API.Create(task.name));
+
+			console.log(response);
 
 			if (response.done) {
 				this.setState({
@@ -281,5 +287,9 @@ Task.defaultProps = {
 	},
 };
 
-export default Task;
+// const mapDispatchToProps = {
+// 	addTask: API.Create,
+// };
 
+// export default connect(null, mapDispatchToProps)(Task);
+export default Task

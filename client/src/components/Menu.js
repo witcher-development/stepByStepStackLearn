@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { ReactComponent as LightOnSvg } from '../assets/light-bulb.svg';
 import { ReactComponent as LightOffSvg } from '../assets/light-bulb-dark.svg';
-import { setTheme } from '../store';
+import { setTheme } from '../store/actions';
 
 const StyledMenu = styled.header`
 	display: flex;

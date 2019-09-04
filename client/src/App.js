@@ -7,7 +7,7 @@ import darkTheme from './themes/dark';
 
 import Menu from './components/Menu';
 import Content from './components/Content';
-import { setTheme } from './store';
+import { setTheme } from './store/actions';
 
 const AppWrapper = styled.div`
   height: 100%;
