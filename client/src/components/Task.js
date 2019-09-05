@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import styled  from 'styled-components';
 import { connect } from 'react-redux';
 
@@ -144,42 +143,24 @@ class Task extends Component {
 
 	async onBlur() {
 		const { task } = this.state;
-		const { APIController, addTask } = this.props;
+		// const {  } = this.props;
 
-		if (!task.id && !task.name) return;
-
-		if (!task.id) {
+		if (task.name) {
 			this.setState({
 				loading: true
 			});
-			const response = await store.dispatch(API.Create(task.name));
-
-			console.log(response);
-
-			if (response.done) {
-				this.setState({
-					loading: false,
-					task: { name: '', subtasks: [] },
-				});
-				this.newTask.current.value = '';
-			}
-
-		} else if (task.name) {
-			this.setState({
-				loading: true
-			});
-			const response = await APIController('update', task);
-
-			if (response.done) {
-				this.setState({
-					loading: false
-				});
-			}
+			// const response = await APIController('update', task);
+			//
+			// if (response.done) {
+			// 	this.setState({
+			// 		loading: false
+			// 	});
+			// }
 		} else {
 			this.setState({
 				loading: true
 			});
-			const response = await APIController('delete', task);
+			// const response = await APIController('delete', task);
 		}
 	}
 
@@ -259,16 +240,12 @@ class Task extends Component {
 				/>
 
 				{ loading && <LoadingForInput /> }
-				
-				{ task.id &&
-					(
-						<div>
-							<ToggleListButton onClick={this.toggleSubList}/>
 
-							{ subList }
-						</div>
-					)
-				}
+				<div>
+					<ToggleListButton onClick={this.toggleSubList}/>
+					{ subList }
+				</div>
+
 			</InputWrap>
 		);
 	}
@@ -276,7 +253,6 @@ class Task extends Component {
 
 Task.propTypes = {
 	task: TaskType,
-	APIController: PropTypes.func.isRequired,
 };
 
 Task.defaultProps = {

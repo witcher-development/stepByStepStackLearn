@@ -3,8 +3,11 @@ import * as Action from './actions';
 
 const url = 'https://us-central1-stack-learn.cloudfunctions.net/app';
 
-export const Get = async () => {
-
+export const Get = () => {
+	return async dispatch => {
+		const response = await axios.get(url);
+		dispatch(Action.setTasks(response.data));
+	}
 };
 
 export const Create = async name => {
@@ -13,7 +16,7 @@ export const Create = async name => {
 		name,
 	});
 
-	console.log(response.status);
+	console.log(response.data);
 
 	return dispatch => {
 		if (response.status === 200) {

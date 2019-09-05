@@ -16,6 +16,7 @@ export const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				taskList: action.tasks,
+				loading: false,
 			};
 		}
 		case 'ADD_TASKS': {
@@ -38,12 +39,6 @@ export const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				taskList: state.taskList.filter(t => t.id !== action.id),
-			};
-		}
-		case 'SET_LOADING': {
-			return {
-				...state,
-				loading: action.loading,
 			};
 		}
 		default: {

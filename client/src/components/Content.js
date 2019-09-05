@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import styled  from 'styled-components';
 import { connect } from 'react-redux';
-import { setTasks, setLoading } from '../store/actions';
+import * as API from '../store/APIController';
 
 import Loading from './Loading';
 import TaskList from './TaskList';
@@ -20,12 +19,8 @@ const Inner = styled.main`
 
 class Content extends Component {
 	async componentDidMount() {
-		const { setTasks, setLoading } = this.props;
-
-		const tasks = await axios.get('https://us-central1-stack-learn.cloudfunctions.net/app');
-
-		setTasks(tasks.data);
-		setLoading(false);
+		const { getTasks } = this.props;
+		getTasks();
 	}
 
 	render() {
@@ -36,7 +31,7 @@ class Content extends Component {
 				{ loading ? (
 					<Loading />
 				) : (
-					<TaskList taskList={taskList} APIController={(name, id) => this.APIController(name, id) } />
+					<TaskList taskList={taskList} />
 				)}
 			</Inner>
 		);
@@ -52,8 +47,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-	setTasks,
-	setLoading,
+	getTasks: API.Get,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Content);

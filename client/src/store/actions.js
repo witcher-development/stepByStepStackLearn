@@ -22,8 +22,3 @@ export const deleteTask = id => ({
 	type: 'DELETE_TASK',
 	id,
 });
-
-export const setLoading = loading => ({
-	type: 'SET_LOADING',
-	loading,
-});
