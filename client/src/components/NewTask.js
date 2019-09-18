@@ -13,7 +13,7 @@ const InputWrap = styled.div`
 `;
 
 const TaskInput = styled.input`
-	width: 100%;
+	width: 200px;
 	height: 32px;
 	
 	margin-bottom: 10px;
@@ -22,31 +22,23 @@ const TaskInput = styled.input`
 	border: none;
 	border-bottom: 1px solid ${props => props.theme.content.textColor};
 	border-radius: 5px;
+	border-bottom-style: dashed;
 	
-	transition: box-shadow .3s ease-out;
+	transition: width .3s ease-out, box-shadow .3s ease-out .2s;
 	
-	&.new-task {
-		width: 200px;
-		border-bottom-style: dashed;
+	&:focus {
+		width: 100%;
+		border-bottom-style: solid;
 		
-		transition: width .3s ease-out, box-shadow .3s ease-out .2s;
+		outline: none;
 		
-		&:focus {
-			width: 100%;
-			border-bottom-style: solid;
-		}
+		box-shadow: 0 0 7px -4px ${props => props.theme.content.textColor} inset;
 	}
 	
 	background-color: transparent;
 	
 	color: ${props => props.theme.content.textColor};
 	font-size: 16px;
-	
-	&:focus {
-		outline: none;
-		
-		box-shadow: 0 0 7px -4px ${props => props.theme.content.textColor} inset;
-	}
 `;
 
 const LoadingForInput = styled(Loading)`
@@ -61,7 +53,7 @@ class NewTask extends Component {
 		super(props);
 
 		this.state = {
-			name: props.task,
+			name: '',
 			loading: false,
 		};
 
@@ -79,23 +71,22 @@ class NewTask extends Component {
 
 	async onBlur() {
 		const { name } = this.state;
-		const { APIController, addTask } = this.props;
 
-		if (!name) return;
-
-		this.setState({
-			loading: true
-		});
-		const response = await store.dispatch(API.Create(name));
+		// if (!name) return;
+		//
+		// this.setState({
+		// 	loading: true
+		// });
+		const response = await this.props.addTask(name);
 
 		console.log(response);
 
-		if (response.done) {
-			this.setState({
-				loading: false,
-			});
-			this.newTask.current.value = '';
-		}
+		// if (response.done) {
+		// 	this.setState({
+		// 		loading: false,
+		// 	});
+		// 	this.newTask.current.value = '';
+		// }
 	}
 
 	render() {
@@ -103,13 +94,12 @@ class NewTask extends Component {
 
 		return (
 			<InputWrap>
-				{/*<TaskInput*/}
-				{/*	value={name}*/}
-				{/*	onBlur={this.onBlur}*/}
-				{/*	onChange={(e) => this.onChange(e.target.value)}*/}
-				{/*	ref={this.newTask}*/}
-				{/*	className={!task.id && 'new-task'}*/}
-				{/*/>*/}
+				<TaskInput
+					value={name}
+					onBlur={this.onBlur}
+					onChange={(e) => this.onChange(e.target.value)}
+					ref={this.newTask}
+				/>
 
 				{ loading && <LoadingForInput /> }
 
@@ -130,9 +120,9 @@ NewTask.defaultProps = {
 	},
 };
 
-// const mapDispatchToProps = {
-// 	addTask: API.Create,
-// };
+const mapDispatchToProps = {
+	addTask: API.Create,
+};
 
-// export default connect(null, mapDispatchToProps)(Task);
-export default NewTask;
+export default connect(null, mapDispatchToProps)(NewTask);
+// export default NewTask;

@@ -10,21 +10,27 @@ export const Get = () => {
 	}
 };
 
-export const Create = async name => {
-	console.log(name);
-	const response = await axios.post(url + '/create', {
-		name,
-	});
+export const Create = name => {
+	console.log('name: ', name);
+	// const response = await axios.post(url + '/create', {
+	// 	name,
+	// });
 
-	console.log(response.data);
+	// console.log(response.data);
 
-	return dispatch => {
-		if (response.status === 200) {
-			dispatch(Action.addTask(response.data));
-			return { done: true };
-		} else {
-			return { done: false };
-		}
+	return async dispatch => {
+		// dispatch('test', 'test');
+		return await new Promise(resolve => {
+			setTimeout(() => {
+				resolve('testString');
+			}, 3000);
+		});
+		// if (response.status === 200) {
+		// 	dispatch(Action.addTask(response.data));
+		// 	return { done: true };
+		// } else {
+		// 	return { done: false };
+		// }
 	};
 };
 
