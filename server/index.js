@@ -80,8 +80,7 @@ app.delete('/delete/:id', async (req, res) => {
 		const { id } = req.params;
 
 		let taskRef = db.collection('tasks').doc(id);
-
-		await taskRef.delete();
+		const response = await taskRef.delete();
 
 		res.status(200).send();
 
@@ -90,6 +89,8 @@ app.delete('/delete/:id', async (req, res) => {
 		res.status(500).send(e);
 	}
 });
+
+app.listen(3001);
 
 const functions = require('firebase-functions');
 

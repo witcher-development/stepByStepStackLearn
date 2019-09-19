@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as Action from './actions';
 
-const url = 'https://us-central1-stack-learn.cloudfunctions.net/app';
+// const url = 'https://us-central1-stack-learn.cloudfunctions.net/app';
+const url = 'http://localhost:3001';
 
 export const Get = () => {
 	return async dispatch => {
@@ -11,43 +12,37 @@ export const Get = () => {
 };
 
 export const Create = name => {
-	console.log('name: ', name);
-	// const response = await axios.post(url + '/create', {
-	// 	name,
-	// });
-
-	// console.log(response.data);
-
 	return async dispatch => {
-		// dispatch('test', 'test');
-		return await new Promise(resolve => {
-			setTimeout(() => {
-				resolve('testString');
-			}, 3000);
-		});
-		// if (response.status === 200) {
-		// 	dispatch(Action.addTask(response.data));
-		// 	return { done: true };
-		// } else {
-		// 	return { done: false };
-		// }
+		const response = await axios.post(url + '/create', { name });
+		if (response.status === 200) {
+			dispatch(Action.addTask(response.data));
+			return { done: true };
+		} else {
+			return { done: false };
+		}
 	};
 };
 
-export const Update = async task => {
-	const response = await axios.post(url + '/update', { task });
-
-	if (response.status === 200) {
-		return { done: true };
-	}
+export const Update = task => {
+	return async dispatch => {
+		const response = await axios.post(url + '/update', { task });
+		if (response.status === 200) {
+			dispatch(Action.updateTask(task));
+			return { done: true };
+		} else {
+			return { done: false };
+		}
+	};
 };
 
-export const Delete = async id => {
-	const response = await axios.delete(`${url}/delete/${id}`);
-
-	if (response.status === 200) {
-		this.setState({
-			taskList: this.state.taskList.filter(task => task.id !== id),
-		});
-	}
+export const Delete = id => {
+	return async dispatch => {
+		const response = await axios.delete(`${url}/delete/${id}`);
+		if (response.status === 200) {
+			dispatch(Action.deleteTask(id));
+			return { done: true };
+		} else {
+			return { done: false };
+		}
+	};
 };

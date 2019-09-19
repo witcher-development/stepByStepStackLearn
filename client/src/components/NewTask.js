@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled  from 'styled-components';
 import { connect } from 'react-redux';
 
-import { store } from '../index';
 import * as API from '../store/APIController';
 
 import TaskType from '../types/taskType';
@@ -71,22 +70,21 @@ class NewTask extends Component {
 
 	async onBlur() {
 		const { name } = this.state;
+		const { addTask } = this.props;
 
-		// if (!name) return;
-		//
-		// this.setState({
-		// 	loading: true
-		// });
-		const response = await this.props.addTask(name);
+		if (!name) return;
 
-		console.log(response);
+		this.setState({
+			loading: true
+		});
+		const response = await addTask(name);
 
-		// if (response.done) {
-		// 	this.setState({
-		// 		loading: false,
-		// 	});
-		// 	this.newTask.current.value = '';
-		// }
+		if (response.done) {
+			this.setState({
+				loading: false,
+			});
+			this.newTask.current.value = '';
+		}
 	}
 
 	render() {

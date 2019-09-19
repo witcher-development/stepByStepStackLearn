@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled  from 'styled-components';
 import { connect } from 'react-redux';
 
-import { store } from '../index';
 import * as API from '../store/APIController';
 
 import TaskType from '../types/taskType';
@@ -143,24 +142,27 @@ class Task extends Component {
 
 	async onBlur() {
 		const { task } = this.state;
-		// const {  } = this.props;
+		const { updateTask, deleteTask } = this.props;
+
+		this.setState({
+			loading: true
+		});
 
 		if (task.name) {
-			this.setState({
-				loading: true
-			});
-			// const response = await APIController('update', task);
-			//
-			// if (response.done) {
-			// 	this.setState({
-			// 		loading: false
-			// 	});
-			// }
+			const response = await updateTask(task);
+
+			if (response.done) {
+				this.setState({
+					loading: false
+				});
+			}
 		} else {
-			this.setState({
-				loading: true
-			});
-			// const response = await APIController('delete', task);
+			const response = await deleteTask(task.id);
+			if (response.done) {
+				this.setState({
+					loading: false
+				});
+			}
 		}
 	}
 
@@ -263,9 +265,9 @@ Task.defaultProps = {
 	},
 };
 
-// const mapDispatchToProps = {
-// 	addTask: API.Create,
-// };
+const mapDispatchToProps = {
+	updateTask: API.Update,
+	deleteTask: API.Delete,
+};
 
-// export default connect(null, mapDispatchToProps)(Task);
-export default Task
+export default connect(null, mapDispatchToProps)(Task);

@@ -19,14 +19,14 @@ export const reducer = (state = initialState, action) => {
 				loading: false,
 			};
 		}
-		case 'ADD_TASKS': {
+		case 'ADD_TASK': {
 			return {
 				...state,
 				taskList: [...state.taskList, action.task],
 			};
 		}
-		case 'UPDATE_TASKS': {
-			const task = action.tasks;
+		case 'UPDATE_TASK': {
+			const task = action.task;
 
 			const index = state.taskList.findIndex(t => t.id === task.id);
 
@@ -35,7 +35,7 @@ export const reducer = (state = initialState, action) => {
 				taskList: Object.assign([...state.taskList], { [index]: task }),
 			};
 		}
-		case 'DELETE_TASKS': {
+		case 'DELETE_TASK': {
 			return {
 				...state,
 				taskList: state.taskList.filter(t => t.id !== action.id),
