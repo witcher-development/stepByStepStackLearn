@@ -1,11 +1,14 @@
 import { createContext } from 'react';
-import { observable, computed } from 'mobx';
 
-class TodoStore {
-	@observable todoList = ['test'];
-	@computed get taskCount() {
-		return this.todoList.length;
-	}
+import TodoStore from './TodoStore';
+import AuthStore from './AuthStore';
+
+class RootStore {
+	TodoStore = new TodoStore();
+	AuthStore = new AuthStore();
 }
 
-export default createContext(new TodoStore());
+export default createContext(new RootStore());
+
+export const TodoStoreContext = createContext(new TodoStore());
+export const AuthStoreContext = createContext(new AuthStore());

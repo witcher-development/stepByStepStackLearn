@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 
-import style from './test.module.scss';
-import TodoStoreContext from '../Store';
+import style from './List.module.scss';
+import { TodoStoreContext } from '@/Store';
 
-const List = observer(() => {
+const Index = observer(() => {
 	const state = useContext(TodoStoreContext);
+
+	window.console.log(state.todoList);
 
 	return (
 		<ul>
@@ -18,4 +20,4 @@ const List = observer(() => {
 	);
 });
 
-export default List;
+export default Index;
