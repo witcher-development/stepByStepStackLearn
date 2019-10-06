@@ -1,20 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { observer } from 'mobx-react';
 
 import style from './List.module.scss';
 import { TodoStoreContext } from '@/Store';
+import Item from '@/components/Item';
 
 const Index = observer(() => {
 	const state = useContext(TodoStoreContext);
 
-	window.console.log(state.todoList);
+	useEffect(() => {
+		window.console.log('fired in component', state.todoList);
+	}, [state.todoList]);
 
 	return (
-		<ul>
-			{state.todoList.map((task, i) => (
-				<li key={i} className={style.item}>
-					{task}
-				</li>
+		<ul className={style.list}>
+			{state.todoList.map((task) => (
+				<Item key={task.id} task={task} />
 			))}
 		</ul>
 	);
