@@ -2,7 +2,10 @@ import { createContext } from 'react';
 import { observable, computed } from 'mobx';
 
 class TodoStore {
-	@observable todoList = ['test', 'porridge'];
+	@observable todoList = ['test'];
+	@computed get taskCount() {
+		return this.todoList.length;
+	}
 }
 
-export const TodoStoreContext = createContext(new TodoStore());
+export default createContext(new TodoStore());
