@@ -1,19 +1,20 @@
 import React, { useContext, useEffect } from 'react';
+import { observer } from 'mobx-react';
 
 import { Get } from '@/API';
-import { TodoStoreContext } from '@/Store';
+import storeContext from '@/Store';
 import List from '@/components/List';
 
-function App() {
-	const todoStore = useContext(TodoStoreContext);
+const App = observer(() => {
+	const { TodoStore } = useContext(storeContext);
 
 	useEffect(() => {
-		console.log('called in container')
-		todoStore.todoList.push({name: 'element', id: 1});
+		const getData = async () => {
+			const data = await Get();
+			TodoStore.setTodoList(data.data);
+		};
 
-		// const todoList = await Get();
-		// window.console.log(todoList);
-		// todoStore.setTodoList(todoList.data);
+		getData();
 	}, []);
 
 	return (
@@ -21,6 +22,6 @@ function App() {
 			<List />
 		</div>
 	);
-}
+});
 
 export default App;
