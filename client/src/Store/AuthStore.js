@@ -1,15 +1,16 @@
-import { observable, computed } from 'mobx';
+import { observable, decorate } from 'mobx';
 
-class TodoStore {
-	constructor(rootStore) {
-		this.rootStore = rootStore
-	}
-
-	@observable role = 'guest';
-	@computed get access() {
+export default class AuthStore {
+	role = 'guest';
+	get access() {
 		const { role } = this;
 		return (role === 'guest' && 'low') || (role === 'owner' && 'high');
 	}
+	login() {
+		this.role = 'owner';
+	}
 }
 
-export default TodoStore;
+decorate(AuthStore, {
+	role: observable,
+});

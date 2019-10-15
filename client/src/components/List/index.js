@@ -6,13 +6,23 @@ import storeContext from '@/Store';
 import Item from '@/components/Item';
 
 const Index = observer(() => {
-	const store = useContext(storeContext);
+	const { TodoStore, AuthStore } = useContext(storeContext);
+
+	let list = [];
+
+	if (AuthStore.access === 'low') {
+		list = TodoStore.todoList.filter(t => t.access !== 'high').map((task) => (
+			<Item key={task.id} task={task} />
+		))
+	} else {
+		list = TodoStore.todoList.map((task) => (
+			<Item key={task.id} task={task} />
+		))
+	}
 
 	return (
 		<ul className={style.list}>
-			{store.TodoStore.todoList.map((task) => (
-				<Item key={task.id} task={task} />
-			))}
+			{ list }
 		</ul>
 	);
 });

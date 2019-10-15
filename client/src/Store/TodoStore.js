@@ -1,12 +1,9 @@
-import { observable, computed } from 'mobx';
+import { observable, decorate } from 'mobx';
 
-class TodoStore {
-	constructor(rootStore) {
-		this.rootStore = rootStore
-	}
-
-	@observable todoList = [];
-	@computed get taskCount() {
+export default class TodoStore {
+	todoList = [];
+	get taskCount() {
+		console.log('fired');
 		return this.todoList.length;
 	}
 
@@ -15,10 +12,10 @@ class TodoStore {
 	}
 
 	setTodoList(list) {
-		window.console.log(this.todoList);
 		this.todoList = list;
-		window.console.log(this.todoList);
 	}
 }
 
-export default TodoStore;
+decorate(TodoStore, {
+	todoList: observable,
+});
