@@ -1,13 +1,19 @@
 import React from 'react';
+import { createStore } from '@reatom/core';
+import { context } from '@reatom/react';
 
 import List from './components/List';
 
-function App() {
+const App = () => {
+	const store = createStore();
+
 	return (
 		<div className="App">
-			<List />
+			<context.Provider value={store}>
+				<List />
+			</context.Provider>
 		</div>
 	);
-}
+};
 
 export default App;

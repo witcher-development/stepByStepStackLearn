@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { creaturesList, getAccessToken } from './../client';
 
 const List = () => {
-	let test;
+	const [list, setList] = useState([]);
+
+	useEffect(() => {
+		const getData = async () => {
+			await getAccessToken();
+
+			const data = await creaturesList();
+			console.log(data);
+			setList(data);
+		};
+		getData();
+	}, []);
 
 	return (
 		<ul>
-			<li></li>
+			{list.map(({ name }) => (
+				<li>{name}</li>
+			))}
 		</ul>
 	);
 };
