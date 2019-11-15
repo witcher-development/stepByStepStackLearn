@@ -1,0 +1,25 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body, #root, .App {
+	height: 100%;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+}
+
+body {
+	margin: 0;
+	color: #fff;
+
+	font-family: Ubuntu;
+}
+
+.App {
+	background: url(./assets/bnet-background-dark.jpg) center -200px no-repeat #002650;
+}

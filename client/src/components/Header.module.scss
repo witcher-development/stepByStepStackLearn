@@ -1,0 +1,14 @@
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 70px;
+
+	border-bottom: 1px solid hsla(0,0%,100%,.12);
+	background-color: rgba(33,52,74,.5);
+
+	&__dropdown:first-of-type {
+		margin-right: 30px;
+	}
+}
