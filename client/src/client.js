@@ -84,7 +84,11 @@ export const requestCreatures = async () => {
 
 	for (const id of ids) {
 		const data = await client.get(url + id);
-		list.push(data);
+		const image = await client.get(data.data.creature_displays[0].key.href);
+		list.push({
+			...data.data,
+			image: image.data.assets[0].value,
+		});
 	}
 
 	return list;
