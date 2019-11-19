@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { map } from '@reatom/core';
 import { useAtom, useAction } from '@reatom/react';
 
 import { requestFamily, requestFamilies, requestTypes } from '../client';
