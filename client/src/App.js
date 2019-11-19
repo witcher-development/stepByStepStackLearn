@@ -1,13 +1,22 @@
 import React from 'react';
+import { Route, BrowserRouter as Router, Redirect } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
 
-import List from './components/List';
+import Login from './components/Login';
+import Chat from './components/Chat';
 
-function App() {
+const App = () => {
 	return (
 		<div className="App">
-			<List />
+			<Router>
+				<div>
+					<Redirect exact from="/" to="/chat" />
+					<Route path="/login" component={Login} />
+					<PrivateRoute path="/chat" component={Chat} />
+				</div>
+			</Router>
 		</div>
 	);
-}
+};
 
 export default App;

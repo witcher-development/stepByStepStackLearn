@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "firebase-tools": "^7.3.0"
+    "effector": "^20.6.2",
+    "effector-react": "^20.4.1",
+    "firebase-tools": "^7.3.0",
+    "react-router-dom": "^5.1.2"
   }
 }
