@@ -6,27 +6,31 @@
 	margin: 50px auto 0;
 }
 
-.logout {
-	display: inline-flex;
-	align-self: flex-end;
-	justify-content: center;
+.buttons {
+	display: flex;
+	justify-content: space-between;
 
-	width: 150px;
-	height: 30px;
+	button {
+		display: flex;
+		justify-content: center;
 
-	background: transparent;
-	border: 1px solid #000;
-	border-radius: 3px;
+		width: 150px;
+		height: 30px;
 
-	text-transform: uppercase;
+		background: transparent;
+		border: 1px solid #000;
+		border-radius: 3px;
 
-	cursor: pointer;
+		text-transform: uppercase;
 
-	transition: all 0.2s;
+		cursor: pointer;
 
-	&:hover {
-		background-color: #000;
-		color: #fff;
+		transition: all 0.2s;
+
+		&:hover {
+			background-color: #000;
+			color: #fff;
+		}
 	}
 }
 
@@ -39,11 +43,71 @@
 
 	ul {
 		max-height: 500px;
-        min-height: 150px;
+		min-height: 300px;
 		overflow-y: scroll;
+
+		list-style: none;
 	}
 
 	&__message {
+		margin-right: 50px;
+		margin-bottom: 40px;
+
+		position: relative;
+
+		&-author {
+			position: relative;
+
+			div {
+				position: absolute;
+				top: 50%;
+				left: -10px;
+				transform: translate(-100%, -50%);
+
+				width: 25px;
+				height: 25px;
+
+				border-radius: 50%;
+			}
+
+			p {
+				color: rgba(0, 0, 0, 0.5)
+			}
+		}
+
+		&-text {
+			display: inline-block;
+
+			margin: 0;
+			padding: 10px;
+
+			background-color: #fff;
+			border-radius: 5px;
+		}
+
+		&_self {
+			composes: chat__message;
+
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+
+			.chat__message-author {
+				div {
+					left: auto;
+					right: -10px;
+					transform: translate(100%, -50%);
+				}
+			}
+		}
+
+		&_continue {
+			margin-top: -30px;
+
+			.chat__message-author {
+				display: none;
+			}
+		}
 	}
 
 	&__action {
@@ -51,7 +115,7 @@
 
 		textarea {
 			width: 100%;
-            padding: 10px 200px 10px 15px;
+			padding: 10px 200px 10px 15px;
 
 			border: none;
 			border-radius: 5px;
@@ -65,26 +129,26 @@
 			right: 10px;
 			top: 10px;
 
-            display: block;
-            width: 100px;
+			display: block;
+			width: 100px;
 
-            padding: 5px 0;
+			padding: 5px 0;
 
-            background: transparent;
-            border: 1px solid #000;
-            border-radius: 3px;
+			background: transparent;
+			border: 1px solid #000;
+			border-radius: 3px;
 
-            font-size: 12px;
-            text-transform: uppercase;
+			font-size: 12px;
+			text-transform: uppercase;
 
-            cursor: pointer;
+			cursor: pointer;
 
-            transition: all 0.2s;
+			transition: all 0.2s;
 
-            &:hover {
-                background-color: #000;
-                color: #fff;
-            }
+			&:hover {
+				background-color: #000;
+				color: #fff;
+			}
 		}
 	}
 }

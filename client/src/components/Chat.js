@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { useStore } from 'effector-react';
 
 import style from './Chat.module.scss';
-import { $chat, sendMessage, logout, $user } from '../store';
+import { $chat, sendMessage, logout, $user, clearChat } from '../store';
 
 const Chat = ({ history }) => {
 	const chat = useStore($chat);
 	const currentUser = useStore($user);
-
-	console.log(chat);
 
 	const [newMessage, setText] = useState('');
 
@@ -20,30 +18,48 @@ const Chat = ({ history }) => {
 	const onInput = (e) => {
 		setText(e.target.value);
 	};
+	const onEnterPress = (e) => {
+		if (e.keyCode === 13 && e.shiftKey === false) {
+			e.preventDefault();
+			onSendMessage();
+		}
+	};
+	const onSendMessage = () => {
+		sendMessage({ author: currentUser, text: newMessage });
+		setText('');
+	};
+
+	const getClasses = (author, i) => {
+		let array = [];
+
+		if (author.id === currentUser.id) {
+			array.push(style.chat__message_self);
+		} else {
+			array.push(style.chat__message);
+		}
+
+		if (chat[i - 1] && chat[i - 1].author.id === author.id) {
+			array.push(style.chat__message_continue);
+		}
+
+		return array.join(' ');
+	};
 
 	return (
 		<div className={style.container}>
-			<button className={style.logout} onClick={onLogout}>
-				Logout
-			</button>
+			<div className={style.buttons}>
+				<button onClick={clearChat}>Clear</button>
+				<button onClick={onLogout}>Logout</button>
+			</div>
 
 			<div className={style.chat}>
 				<ul>
-					{chat.map(({ id, text, author }) => (
-						<li
-							key={id}
-							className={
-								currentUser.id === author.id
-									? style.chat__message_self
-									: style.chat__message
-							}
-						>
-							<p
-								className={style['chat__message-author']}
-								data-avatar={author.color}
-							>
-								{author.name}
-							</p>
+					{chat.map(({ text, author }, i) => (
+						<li key={i} className={getClasses(author, i)}>
+							<div className={style['chat__message-author']}>
+								<div style={{ backgroundColor: author.color }}></div>
+								<p>{author.name}</p>
+							</div>
 							<p className={style['chat__message-text']}>{text}</p>
 						</li>
 					))}
@@ -53,14 +69,9 @@ const Chat = ({ history }) => {
 						value={newMessage}
 						onInput={onInput}
 						onChange={() => {}}
+						onKeyDown={onEnterPress}
 					></textarea>
-					<button
-						onClick={() =>
-							sendMessage({ author: currentUser, text: newMessage })
-						}
-					>
-						Send
-					</button>
+					<button onClick={onSendMessage}>Send</button>
 				</div>
 			</div>
 		</div>
