@@ -1,12 +1,30 @@
-export * from './lib/number';
 import { Component } from './lib/component';
 
-const input: Component = {
-  test: 'test2'
+// class Root {
+//   protected readonly rootElement: HTMLElement | null;
+//   protected readonly rootComponent: Component | null;
+//
+//   public init(element: HTMLElement, component: Component) {
+//     this.rootElement = element;
+//     this.rootComponent = component;
+//   };
+// }
+
+function Root() {
+  let rootElement;
+
+  this.init = (element: string) => {
+    rootElement = element;
+  };
+
+  const getRootElement = () => {
+    return rootElement;
+  };
 };
 
-const func = (input1: Component): Component => {
-  return input1;
-};
+const app = new Root();
+app.init('root test');
 
-console.log(func(input));
+setTimeout(() => {
+  console.log(app.getRootElement());
+}, 1000);
