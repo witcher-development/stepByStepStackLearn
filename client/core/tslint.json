@@ -13,13 +13,10 @@
     "typedef": [true, "call-signature"],
 
     // Immutability rules
-    "readonly-keyword": true,
     "no-delete": true,
     "no-method-signature": true,
 
     // Functional style rules
-    "no-this": true,
-    "no-class": true,
     "no-mixed-interface": true
     /* end tslint-immutable rules */
   }

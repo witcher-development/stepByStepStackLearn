@@ -1,30 +1,34 @@
 import { Component } from './lib/component';
 
-// class Root {
-//   protected readonly rootElement: HTMLElement | null;
-//   protected readonly rootComponent: Component | null;
-//
-//   public init(element: HTMLElement, component: Component) {
-//     this.rootElement = element;
-//     this.rootComponent = component;
-//   };
-// }
+class Root {
+  protected rootElement: HTMLElement | null;
+  protected rootComponent: Component | null;
 
-function Root() {
-  let rootElement;
+  public init(element: HTMLElement | null, component: Component) {
+    this.rootElement = element;
+    this.rootComponent = component;
 
-  this.init = (element: string) => {
-    rootElement = element;
-  };
+    this.rootElement.innerHTML = this.rootComponent.render();
+  }
+}
 
-  const getRootElement = () => {
-    return rootElement;
-  };
-};
+export { Root, Component }
 
-const app = new Root();
-app.init('root test');
+// const element = null;
 
-setTimeout(() => {
-  console.log(app.getRootElement());
-}, 1000);
+// const props = [
+//   {
+//     name: 'text',
+//     value: 'text from props'
+//   },
+//   {
+//     name: 'word',
+//     value: 'word from props'
+//   }
+// ];
+// const template = '<div><p>{text}</p>new<p>{word}</p><div>';
+// const component = new Component(props, template);
+
+
+// const app = new Root();
+// app.init(element, component);
